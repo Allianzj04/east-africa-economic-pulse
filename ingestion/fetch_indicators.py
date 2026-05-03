@@ -27,5 +27,6 @@ if __name__ == '__main__':
     frames.append(df)
 
   data = pd.concat(frames, ignore_index=True)
-  print(data)
-  print(data.shape)
+  # print(data)
+  # print(data.shape)
+  # print(df)
