@@ -4,6 +4,8 @@ import pandas as pd
 from dotenv import load_dotenv
 from prefect import task, flow
 
+load_dotenv()
+
 @task
 def ingestion():
   frames = []
@@ -16,7 +18,6 @@ def ingestion():
 
 @task
 def storage(data):
-  load_dotenv()
   l.load_to_db(data)
 
 @flow
