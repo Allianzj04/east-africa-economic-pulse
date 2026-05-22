@@ -3,7 +3,7 @@ import psycopg2
 from dotenv import load_dotenv
 import os
 import wbgapi as wb
-import pandas as pd
+import polars as pl
 
 load_dotenv()
 def get_connection():
@@ -24,7 +24,7 @@ for code, label in f.INDICATORS.items():
   df = f.fetch_indicator(code, label, f.COUNTRIES)
   frames.append(df)
 
-data = pd.concat(frames, ignore_index=True)
+data = pl.concat(frames)
 # print(data)
 
 def load_to_db(df):
@@ -47,7 +47,7 @@ def load_to_db(df):
       """, (code, label)
     )
 
-  for _, row in df.iterrows():
+  for row in df.iter_rows(named=True):
     cursor.execute(
       """
         SELECT id FROM dim_country WHERE dim_country.code=%s
