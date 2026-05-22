@@ -1,5 +1,6 @@
 import wbgapi as wb
 import pandas as pd
+import polars as pl
 
 COUNTRIES = ['BDI', 'RWA', 'KEN', 'TZA', 'UGA']
 INDICATORS = {
@@ -14,10 +15,13 @@ def fetch_indicator(code, label, countries, start=2010, end=2023):
   )
   df_long = df.stack().reset_index()
   df_long.columns = ['country', 'year', 'value']
-  df_long['year'] = df_long['year'].str.replace('YR', '').astype(int)
-  df_long['value'] = df_long['value'].round(2)
-  df_long['indicator'] = label
-  return df_long
+  df_polars = pl.from_pandas(df_long)
+  df_polars = df_polars.with_columns(
+    pl.col('year').str.replace('YR', '').cast(pl.Int64),
+    pl.col('value').round(2),
+    pl.lit(label).alias('indicator')
+    )
+  return df_polars
 
 
 if __name__ == '__main__':
@@ -26,7 +30,7 @@ if __name__ == '__main__':
     df = fetch_indicator(code, label, COUNTRIES)
     frames.append(df)
 
-  data = pd.concat(frames, ignore_index=True)
+  data = pl.concat(frames)
   # print(data)
-  # print(data.shape)
+  print(data.shape)
   # print(df)
