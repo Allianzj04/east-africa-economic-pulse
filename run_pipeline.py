@@ -1,6 +1,6 @@
 import ingestion.fetch_indicators as f
 import storage.load as l
-import pandas as pd
+import polars as pl
 from dotenv import load_dotenv
 from prefect import task, flow
 
@@ -13,7 +13,7 @@ def ingestion():
     df = f.fetch_indicator(code, label, f.COUNTRIES)
     frames.append(df)
 
-  data = pd.concat(frames, ignore_index=True)
+  data = pl.concat(frames)
   return data
 
 @task
