@@ -35,3 +35,25 @@ def country_code_gdp(country_code: str):
       WHERE c.code = %s;
     """, (country_code,)
   )
+@app.get("/countries/ranking")
+def country_ranking(
+  year: int = 2023):
+  return execute_query(
+    """
+WITH ranking AS (
+    SELECT 
+        c.name AS country_name, 
+        ec.year,
+		ec.value,
+        RANK() OVER (ORDER BY value DESC) AS rank
+    FROM fact_economic ec
+    JOIN dim_country c ON c.id = ec.country_id
+	WHERE year = %s
+)
+SELECT 
+    country_name, 
+    value, 
+	rank
+FROM ranking;
+    """, (year, )
+  )
