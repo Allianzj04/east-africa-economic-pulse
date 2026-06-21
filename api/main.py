@@ -24,3 +24,14 @@ def country_gdp(
       LIMIT %s OFFSET ap%s;
     """, (limit, OFFSET)
   )
+
+@app.get("/gdp/{country_code}")
+def country_code_gdp(country_code: str):
+  return execute_query(
+    """
+      SELECT c.name AS country, ec.year, ec.value
+      FROM dim_country c
+      JOIN fact_economic ec ON c.id = ec.country_id
+      WHERE c.code = %s;
+    """, (country_code,)
+  )
