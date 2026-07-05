@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GDP Chart</title>
+</head>
+<body>
+    <label for="country-select">To see an east african country GDP</label>
+    <select id="country-select"></select>
+    <canvas id="gdp-chart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const select = document.getElementById('country-select');
+        let chart = null;
+        async function showCountries() {
+            try {
+                const response = await fetch('http://localhost:8000/countries');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                select.innerHTML = `<option>Choose a country ...</option>`
+                data.forEach(country => {
+                    const option = document.createElement('option')
+                    option.value = country.code
+                    option.textContent = country.name
+                    select.appendChild(option)
+                });
+            } catch (error) {
+                console.error('Erreur :', error);
+                document.body.innerHTML = '<p style="color:red;">Error loading ...</p>';
+            }
+        } showCountries();
+
+        async function loadGDP(code) {
+                    const response = await fetch('http://localhost:8000/gdp/' + code)
+                    const country = await response.json()
+                    const labels = country.map(row => row.year)
+                    const values = country.map(row => row.value)
+
+                    return {labels, values}
+                }
+
+        function renderChart(labels, values) {
+                    const canvas = document.getElementById('gdp-chart');
+                    if (chart) {
+                        chart.destroy();
+                    }
+                    chart = new Chart(canvas, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'GDP per capita(USD)',
+                                data: values
+                            }]
+                        }
+                    })
+                }
+
+        select.addEventListener('change', async function() {
+            const code = this.value;
+            const {labels, values} = await loadGDP(code)
+            renderChart(labels, values)
+        })
+    </script>
+</body>
+</html>
