@@ -29,7 +29,7 @@ def country_gdp(
       SELECT c.name AS country, ec.year, ec.value
       FROM dim_country c
       JOIN fact_economic ec ON c.id = ec.country_id
-      LIMIT %s OFFSET ap%s;
+      LIMIT %s OFFSET %s;
     """, (limit, OFFSET)
   )
 
