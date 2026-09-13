@@ -15,7 +15,7 @@
         let chart = null;
         async function showCountries() {
             try {
-                const response = await fetch('http://localhost:8000/countries');
+                const response = await fetch('countries');
                 if (!response.ok) throw new Error(`HTTP ${response.status}`);
                 const data = await response.json();
                 select.innerHTML = `<option>Choose a country ...</option>`
