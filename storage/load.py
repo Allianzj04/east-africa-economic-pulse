@@ -1,3 +1,5 @@
+import urllib.parse
+
 import ingestion.fetch_indicators as f
 import psycopg2
 from dotenv import load_dotenv
@@ -5,14 +7,16 @@ import os
 import wbgapi as wb
 import polars as pl
 
-load_dotenv()
 def get_connection():
+  load_dotenv()
+  database_url = os.getenv('DATABASE_URL')
+  parsed = urllib.parse.urlparse(database_url)
   conn = psycopg2.connect(
-    dbname=os.getenv("DB_NAME"),
-    host=os.getenv("DB_HOST"),
-    user=os.getenv("DB_USER"),
-    password=os.getenv("DB_PASSWORD"),
-    port=os.getenv("DB_PORT"),
+    dbname=parsed.path[1:],
+    host=parsed.hostname,
+    user=parsed.username,
+    password=parsed.password,
+    port=parsed.port,
   )
   return conn
 
