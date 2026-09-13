@@ -32,7 +32,7 @@
         } showCountries();
 
         async function loadGDP(code) {
-                    const response = await fetch('http://localhost:8000/gdp/' + code)
+                    const response = await fetch('/gdp/' + code)
                     const country = await response.json()
                     const labels = country.map(row => row.year)
                     const values = country.map(row => row.value)
