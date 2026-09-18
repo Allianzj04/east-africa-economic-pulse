@@ -5,6 +5,9 @@ import polars as pl
 COUNTRIES = ['BDI', 'RWA', 'KEN', 'TZA', 'UGA']
 INDICATORS = {
   'NY.GDP.PCAP.CD': 'gdp_per_capita',
+  'FP.CPI.TOTL.ZG': 'inflation',
+  'PA.NUS.FCRF': 'exchange_rate',
+  'SL.UEM.TOTL.ZS': 'unemployment'
 }
 
 def fetch_indicator(code, label, countries, start=2010, end=2023):
