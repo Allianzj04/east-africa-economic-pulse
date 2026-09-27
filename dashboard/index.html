@@ -3,65 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GDP Chart</title>
+    <title>East Africa Economic Pulse</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-    <label for="country-select">To see an east african country GDP</label>
-    <select id="country-select"></select>
-    <canvas id="gdp-chart"></canvas>
+    <h1>East Africa Economic Pulse</h1>
+    <p class="subtitle">Economic indicators across five East African countries, 2010–2023.</p>
+
+    <main>
+        <div class="controls">
+            <div class="field">
+                <label for="countrySelect">Country</label>
+                <select id="countrySelect"></select>
+            </div>
+            <div class="field">
+                <label for="indicatorSelect">Indicator</label>
+                <select id="indicatorSelect">
+                    <option value="gdp_per_capita">GDP per capita</option>
+                    <option value="inflation">Inflation</option>
+                    <option value="exchange_rate">Exchange rate</option>
+                    <option value="unemployment">Unemployment</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="chart-frame">
+            <canvas id="gdp-chart"></canvas>
+        </div>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const select = document.getElementById('country-select');
-        let chart = null;
-        async function showCountries() {
-            try {
-                const response = await fetch('countries');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                const data = await response.json();
-                select.innerHTML = `<option>Choose a country ...</option>`
-                data.forEach(country => {
-                    const option = document.createElement('option')
-                    option.value = country.code
-                    option.textContent = country.name
-                    select.appendChild(option)
-                });
-            } catch (error) {
-                console.error('Erreur :', error);
-                document.body.innerHTML = '<p style="color:red;">Error loading ...</p>';
-            }
-        } showCountries();
-
-        async function loadGDP(code) {
-                    const response = await fetch('/gdp/' + code)
-                    const country = await response.json()
-                    const labels = country.map(row => row.year)
-                    const values = country.map(row => row.value)
-
-                    return {labels, values}
-                }
-
-        function renderChart(labels, values) {
-                    const canvas = document.getElementById('gdp-chart');
-                    if (chart) {
-                        chart.destroy();
-                    }
-                    chart = new Chart(canvas, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [{
-                                label: 'GDP per capita(USD)',
-                                data: values
-                            }]
-                        }
-                    })
-                }
-
-        select.addEventListener('change', async function() {
-            const code = this.value;
-            const {labels, values} = await loadGDP(code)
-            renderChart(labels, values)
-        })
-    </script>
+    <script src="/static/script.js"></script>
 </body>
 </html>
