@@ -27,4 +27,4 @@ def launch():
 
 
 if __name__ == '__main__':
-  launch()
+    launch.serve(name='eaep-pipeline', cron='0 6 1 * *')
