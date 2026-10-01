@@ -191,6 +191,4 @@ Paired with [tontine-platform](https://github.com/Allianzj04/tontine-platform) (
 
 ## Author
 
-Allianz — Software Engineering student, Burundi. Self-taught, targeting a Data / Backend program.
-
-`<!-- TODO: add contact / LinkedIn if you want it on the README -->`
+Allianzj04 — Software Engineering student, Burundi. Self-taught, targeting a Data / Backend program.
