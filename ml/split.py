@@ -12,3 +12,10 @@ if __name__ == '__main__':
     train, test = split_train_test(wide)
     print("Train shape:", train.shape)
     print("Test shape:", test.shape)
+
+    baseline = train["unemployment"].mean()
+    print("Baseline unemployment mean:", baseline)
+
+    mae = (test["unemployment"] - baseline).abs().mean()
+    print("Mean Absolute Error (MAE):", mae)
+
